@@ -17,7 +17,7 @@ var client = new Twitter({
 
 client.get("statuses/user_timeline", function(error, tweets) {
 	if (error) {
-		console.log("error!");
+		console.log("Error: " + error);
 	}else if (!error && userCommand1 === "my-tweets") {
 		for (var i = 0; i < tweets.length; i++) {
 			if (tweets.length === 21) {
@@ -45,7 +45,7 @@ var spotify = new Spotify({
  
 spotify.search({ type: 'track', query: userCommand2 || "The Sign Ace of Base", limit: 1 }, function(error, response) {
   if (error) {
-    return console.log('Error occurred: ' + error);
+    console.log('Error: ' + error);
   }else if (!error && userCommand1 === "spotify-this-song") {
   	// console.log("spotify call works");
   	// console.log(JSON.stringify(response, null, 2));
@@ -57,36 +57,66 @@ spotify.search({ type: 'track', query: userCommand2 || "The Sign Ace of Base", l
   	console.log(response.tracks.items[0].external_urls);
   	//the song's album
   	console.log(response.tracks.items[0].album.name);
-  }
+  }else doWhatItSays();
 });
 
 //movie-this:
 	//example: node liri.js movie-this '<movie name here>'
 	//this will output the following info: 
-		/*Title of the movie.
-		Year the movie came out.
-		IMDB Rating of the movie.
-		Country where the movie was produced.
-		Language of the movie.
-		Plot of the movie.
-		Actors in the movie.
-		Rotten Tomatoes URL.*/
+		// Title of the movie.
+		// Year the movie came out.
+		// IMDB Rating of the movie.
+		// Country where the movie was produced.
+		// Language of the movie.
+		// Plot of the movie.
+		// Actors in the movie.
+		// Rotten Tomatoes URL.
 	//If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 		//"If you haven't watched "Mr. Nobody," then you should: http://www.imdb.com/title/tt0485947/"
 		//"It's on Netflix!"
+var request = require("request");
+
+
+var queryURL = "http://www.omdbapi.com/?apikey=ac73aa36&t=" + userCommand2;
+request(queryURL, function(error, data, body) {
+
+	if (error) {
+		console.log("Error: " + error);
+	}else if (!error && userCommand1 === "movie-this") {
+		//console.log(response);
+		// Title of the movie.
+		console.log(body);
+		console.log(body.title);
+		// Year the movie came out.
+		// IMDB Rating of the movie.
+		// Country where the movie was produced.
+		// Language of the movie.
+		// Plot of the movie.
+		// Actors in the movie.
+		// Rotten Tomatoes URL.
+	}
+
+
+});
 
 //do-what-it-says: Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 	//It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
 	//Feel free to change the text in that document to test out the feature for other commands.
 var fs = require("fs");
 
-fs.readFile("random.txt", "utf8", function(error, data) {
-  if (error) {
-    return console.log(error);
-  }else if (!error && userCommand1 === "do-what-it-says") {
-  	
-  }
-});
+function doWhatItSays() {
+	fs.readFile("random.txt", "utf8", function(error, data) {
+	  if (error) {
+	    return console.log(error);
+	  }else if (!error && userCommand1 === "do-what-it-says") {
+	  	//console.log(data);
+	  	var dataArr = data.split(",");
+	  	console.log(dataArr);
+	  	userCommand1 = dataArr[0];
+	  	userCommand2 = dataArr[1];
+	  }
+	});
+}
 
 //bonus
 	//In addition to logging the data to your terminal/bash window, output the data to a .txt file called log.txt.
