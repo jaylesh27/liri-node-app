@@ -1,12 +1,10 @@
 var keys = require("./keys.js");
 
-var userCommand = process.argv[2];
-
-//console.log(keys.twitterKeys.consumer_key);
-
+var userCommand1 = process.argv[2];
+var userCommand2 = process.argv[3];
 
 //my-tweets: This will show your last 20 tweets and when they were created at in your terminal/bash window.
-var Twitter = require('twitter');
+var Twitter = require("twitter");
 
 var client = new Twitter({
   consumer_key: keys.twitterKeys.consumer_key,
@@ -17,10 +15,10 @@ var client = new Twitter({
 
 //console.log(client);
 
-client.get("statuses/user_timeline", function(error, tweets, response) {
+client.get("statuses/user_timeline", function(error, tweets) {
 	if (error) {
 		console.log("error!");
-	}else if (!error && userCommand === "my-tweets") {
+	}else if (!error && userCommand1 === "my-tweets") {
 		for (var i = 0; i < tweets.length; i++) {
 			if (tweets.length === 21) {
 				break;
@@ -30,7 +28,6 @@ client.get("statuses/user_timeline", function(error, tweets, response) {
 			// console.log(tweets[i].text);
 			// console.log(tweets[i].user.name)
 			console.log("--------------");
-
 		}
 	}
 });
@@ -39,6 +36,29 @@ client.get("statuses/user_timeline", function(error, tweets, response) {
 	//example: node liri.js spotify-this-song '<song name here>'
 	//This will show the following information about the song in your bash window: artist(s), the song's name, a preview link of the song from Spotify, and the album that the song is from
 	//if no song is provided then your program will default to "The Sign" by Ace of Base
+var Spotify = require('node-spotify-api');
+
+var spotify = new Spotify({
+  id: "f61401f0e074460fb649873b2b1ccfcd",
+  secret: "aeb06333b80e45e6bd6994eaa6e233a8"
+});
+ 
+spotify.search({ type: 'track', query: userCommand2 || "The Sign Ace of Base", limit: 1 }, function(error, response) {
+  if (error) {
+    return console.log('Error occurred: ' + error);
+  }else if (!error && userCommand1 === "spotify-this-song") {
+  	// console.log("spotify call works");
+  	// console.log(JSON.stringify(response, null, 2));
+  	//artist
+  	console.log(response.tracks.items[0].artists[0].name);
+  	//song's name
+  	console.log(response.tracks.items[0].name);
+  	//preview link of the song from spotify
+  	console.log(response.tracks.items[0].external_urls);
+  	//the song's album
+  	console.log(response.tracks.items[0].album.name);
+  }
+});
 
 //movie-this:
 	//example: node liri.js movie-this '<movie name here>'
@@ -58,7 +78,15 @@ client.get("statuses/user_timeline", function(error, tweets, response) {
 //do-what-it-says: Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 	//It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
 	//Feel free to change the text in that document to test out the feature for other commands.
+var fs = require("fs");
 
+fs.readFile("random.txt", "utf8", function(error, data) {
+  if (error) {
+    return console.log(error);
+  }else if (!error && userCommand1 === "do-what-it-says") {
+  	
+  }
+});
 
 //bonus
 	//In addition to logging the data to your terminal/bash window, output the data to a .txt file called log.txt.
