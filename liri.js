@@ -103,7 +103,7 @@ if (userCommand1 === "movie-this" && userCommand2 === undefined) {
 			}else if (!error) {
 				console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/" + "\nIt's on Netflix!");
 				printMovieInfo(body);
-				logData(data);
+				
 			}
 		});
 	}else request(queryURL, function(error, data, body) {
@@ -111,7 +111,6 @@ if (userCommand1 === "movie-this" && userCommand2 === undefined) {
 			console.log("Error: " + error);
 		}else if (!error && userCommand1 === "movie-this") {
 			printMovieInfo(body);
-			logData(data);
 			}
 		});
 
@@ -134,7 +133,7 @@ function doWhatItSays() {
 		  	userCommand1 = dataArr[0];
 		  	userCommand2 = dataArr[1];
 		  	spotifyThisSong(userCommand1, userCommand2);
-		  	logData();
+		  	
 		  }
 		});
 	}
