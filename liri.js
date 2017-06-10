@@ -1,10 +1,13 @@
 var keys = require("./keys.js");
+var Twitter = require("twitter");
+var Spotify = require('node-spotify-api');
+var request = require("request");
+var fs = require("fs");
 
 var userCommand1 = process.argv[2];
 var userCommand2 = process.argv[3];
 
 //my-tweets: This will show your last 20 tweets and when they were created at in your terminal/bash window.
-var Twitter = require("twitter");
 
 var client = new Twitter({
   consumer_key: keys.twitterKeys.consumer_key,
@@ -35,7 +38,7 @@ client.get("statuses/user_timeline", function(error, tweets) {
 	//example: node liri.js spotify-this-song '<song name here>'
 	//This will show the following information about the song in your bash window: artist(s), the song's name, a preview link of the song from Spotify, and the album that the song is from
 	//if no song is provided then your program will default to "The Sign" by Ace of Base
-var Spotify = require('node-spotify-api');
+
 
 var spotify = new Spotify({
   id: "f61401f0e074460fb649873b2b1ccfcd",
@@ -68,7 +71,7 @@ function spotifyThisSong(userCommand1, userCommand2) {
 	//If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 		//"If you haven't watched "Mr. Nobody," then you should: http://www.imdb.com/title/tt0485947/"
 		//"It's on Netflix!"
-var request = require("request");
+
 
 var queryURL = "http://www.omdbapi.com/?apikey=ac73aa36&t=" + userCommand2;
 var defaultQuery = "http://www.omdbapi.com/?apikey=ac73aa36&t=mr+nobody";
@@ -117,14 +120,14 @@ if (userCommand1 === "movie-this" && userCommand2 === undefined) {
 //do-what-it-says: Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 	//It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
 	//Feel free to change the text in that document to test out the feature for other commands.
-var fs = require("fs");
+
 
 function doWhatItSays() {
 	if (userCommand1 === "do-what-it-says") {
 		fs.readFile("random.txt", "utf8", function(error, data) {
 		  if (error) {
 		    return console.log("Error: " + error);
-		  }else if (!error && userCommand1 === "do-what-it-says") {
+		  }else if (!error) {
 		  	//console.log(data);
 		  	var dataArr = data.split(",");
 		  	//console.log(dataArr);
